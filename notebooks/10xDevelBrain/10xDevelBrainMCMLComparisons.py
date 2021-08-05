@@ -52,15 +52,15 @@ os.system("pip install --quiet scanpy==1.6.0 --no-cache-dir")
 os.system("pip3 install --quiet scvi-tools --no-cache-dir")
 
 
-os.system("git clone --single-branch --branch taraDev https://tarachari3:marsianID2.@github.com/pachterlab/spacetime.git")
+os.system("git clone https://github.com/pachterlab/CBP_2021.git")
 
-os.system("cd /content/spacetime/nnNCApy")
+os.system("cd /content/CBP_2021/scripts")
 
 
 import anndata 
 import pandas as pd
 import numpy as np
-from MCML import NN_NCA #Now has continuous label addition
+from MCML import mcml #Now has continuous label addition
 # import visualizations as vis
 # import tools as tl
 import random
@@ -270,7 +270,7 @@ acc_scoreR = []
 acc_scoreR2 = []
 for i in range(3):
 	tic = time.perf_counter()
-	ncaR = NN_NCA(n_latent = n_latent, epochs = 100)
+	ncaR = mcml(n_latent = n_latent, epochs = 100)
 	labels = np.array([lab1])
 	train_inds = np.random.choice(len(scaled_mat), size = int(0.7*len(scaled_mat)),replace=False)
 	unlab_inds = [i for i in range(len(adata)) if i not in train_inds]
@@ -303,8 +303,8 @@ print(acc_scoreR2)
 
 # for i in range(3):
 # 	tic = time.perf_counter()
-# 	nca = NN_NCA(n_latent = n_latent, epochs = 100)
-# 	ncaR2 = NN_NCA(n_latent = n_latent, epochs = 100)
+# 	nca = mcml(n_latent = n_latent, epochs = 100)
+# 	ncaR2 = mcml(n_latent = n_latent, epochs = 100)
 
 # 	labels = np.array([lab1])
 # 	train_inds = np.random.choice(len(scaled_mat), size = int(0.7*len(scaled_mat)),replace=False)
@@ -352,8 +352,8 @@ for b in [0.99]:
 
 	for i in range(3):
 		tic = time.perf_counter()
-		nca = NN_NCA(n_latent = n_latent, epochs = 500)
-		#ncaR2 = NN_NCA(n_latent = n_latent, epochs = 100)
+		nca = mcml(n_latent = n_latent, epochs = 500)
+		#ncaR2 = mcml(n_latent = n_latent, epochs = 100)
 
 		labels = np.array([lab1])
 		train_inds = np.random.choice(len(scaled_mat), size = int(0.7*len(scaled_mat)),replace=False)
@@ -441,8 +441,8 @@ percs = [0.7,0.6,0.5,0.4,0.3,0.2,0.1]
 print('Starting lower percentages')
 
 for p in percs:
-  nca = NN_NCA(n_latent = n_latent, epochs = 100)
-  ncaR2 = NN_NCA(n_latent = n_latent, epochs = 100)
+  nca = mcml(n_latent = n_latent, epochs = 100)
+  ncaR2 = mcml(n_latent = n_latent, epochs = 100)
 
   labels = np.array([lab1])
   train_inds = np.random.choice(len(scaled_mat), size = int(p*len(scaled_mat)),replace=False)
