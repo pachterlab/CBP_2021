@@ -77,15 +77,14 @@ os.system("pip3 install --quiet scvi-tools --no-cache-dir")
 
 
 
+os.system("git clone https://github.com/pachterlab/CBP_2021.git")
 
-os.system("git clone --single-branch --branch taraDev https://tarachari3:marsianID2.@github.com/pachterlab/spacetime.git")
-
-os.system("cd /content/spacetime/nnNCApy")
+os.system("cd /content/CBP_2021/scripts")
 
 import anndata 
 import pandas as pd
 import numpy as np
-from MCML import NN_NCA #Now has continuous label addition
+from MCML import mcml #Now has continuous label addition
 import random
 
 from sklearn.decomposition import TruncatedSVD
@@ -163,7 +162,7 @@ device = "cpu" #torch.device("cuda" if torch.cuda.is_available() else "cpu")
 for i in range(3):
 	# Latent space from All NCA loss
 	tic = time.perf_counter()
-	nca = NN_NCA(n_latent = n_latent, epochs = 50)
+	nca = mcml(n_latent = n_latent, epochs = 50)
 	latent_allNCA = nca.fit(scaled_mat,allLabs, fracNCA = 1, silent = True)
 	toc = time.perf_counter()
 	print(f"nnNCA fit in {toc - tic:0.4f} seconds")
@@ -190,7 +189,7 @@ for i in range(3):
 	X_trans = ncaSk.transform(X)
 
 	# Make NCA object and use functions to get masks + loss
-	newNCA = NN_NCA(n_latent = n_latent, epochs = 50)
+	newNCA = mcml(n_latent = n_latent, epochs = 50)
 
 	logX = torch.from_numpy(scaled_mat).float().to("cpu")
 
@@ -256,7 +255,7 @@ scaled_mat = sub.X
 for i in range(3):
 	# Latent space from All NCA loss
 	tic = time.perf_counter()
-	nca = NN_NCA(n_latent = n_latent, epochs = 50)
+	nca = mcml(n_latent = n_latent, epochs = 50)
 	latent_allNCA = nca.fit(scaled_mat,labs, fracNCA = 1, silent = True)
 	toc = time.perf_counter()
 	print(f"nnNCA fit in {toc - tic:0.4f} seconds")
@@ -283,7 +282,7 @@ for i in range(3):
 	X_trans = ncaSk.transform(X)
 
 	# Make NCA object and use functions to get masks + loss
-	newNCA = NN_NCA(n_latent = n_latent, epochs = 50)
+	newNCA = mcml(n_latent = n_latent, epochs = 50)
 
 	logX = torch.from_numpy(scaled_mat).float().to("cpu")
 
