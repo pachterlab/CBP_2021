@@ -110,14 +110,14 @@ os.system("pip3 install --quiet scvi-tools --no-cache-dir")
 
 
 
-os.system("git clone --single-branch --branch taraDev https://tarachari3:marsianID2.@github.com/pachterlab/spacetime.git")
+os.system("git clone https://github.com/pachterlab/CBP_2021.git")
 
-os.system("cd /content/spacetime/nnNCApy")
+os.system("cd /content/CBP_2021/scripts")
 
 import anndata 
 import pandas as pd
 import numpy as np
-from MCML import NN_NCA #Now has continuous label addition
+from MCML import mcml #Now has continuous label addition
 import random
 import scvi
 from sklearn.decomposition import TruncatedSVD
@@ -255,7 +255,7 @@ for i in range(1):
 
 
 	tic = time.perf_counter()
-	ncaR = NN_NCA(n_latent = n_latent, epochs = 100)
+	ncaR = mcml(n_latent = n_latent, epochs = 100)
 
 
 	lossesR, latentR = ncaR.fit(count_mat,nanLabs,fracNCA = 0, silent = True,ret_loss = True) #labels
@@ -286,7 +286,7 @@ for i in range(1):
 	newLabs[unlabeled_idx,:] = np.nan
 
 	tic = time.perf_counter()
-	ncaMiss = NN_NCA(n_latent = n_latent, epochs = 100) #n_latent
+	ncaMiss = mcml(n_latent = n_latent, epochs = 100) #n_latent
 
 
 	lossesNCAMiss, latentNCAMiss = ncaMiss.fit(count_mat,newLabs.T,fracNCA = 0.9999, silent = True,ret_loss = True)
@@ -376,7 +376,7 @@ for i in range(1):
 	labels[:, unlab_inds] = np.nan
 
 	tic = time.perf_counter()
-	ncaR = NN_NCA(n_latent = n_latent, epochs = 100)
+	ncaR = mcml(n_latent = n_latent, epochs = 100)
 
 
 	lossesR, latentR = ncaR.fit(scaled_mat,nanLabs,fracNCA = 0, silent = True,ret_loss = True) #labels
@@ -399,7 +399,7 @@ for i in range(1): #3
 	labels[:, unlab_inds] = np.nan
 
 	tic = time.perf_counter()
-	nca = NN_NCA(n_latent = n_latent, epochs = 100)
+	nca = mcml(n_latent = n_latent, epochs = 100)
 
 
 	losses, latent = nca.fit(scaled_mat,labels,fracNCA = 0.3, silent = True,ret_loss = True)
@@ -485,7 +485,7 @@ nanLabs = np.array([[np.nan]*len(lab1)])
 
 for i in range(1):
 	tic = time.perf_counter()
-	ncaR = NN_NCA(n_latent = n_latent, epochs = 100)
+	ncaR = mcml(n_latent = n_latent, epochs = 100)
 	labels = np.array([lab1])
 	train_inds = np.random.choice(len(scaled_mat), size = int(0.7*len(scaled_mat)),replace=False)
 	unlab_inds = [i for i in range(len(adata)) if i not in train_inds]
@@ -504,7 +504,7 @@ numCells += [rawcount_mat.shape[0]]
 
 for i in range(1): #3
 	tic = time.perf_counter()
-	nca = NN_NCA(n_latent = n_latent, epochs = 100)
+	nca = mcml(n_latent = n_latent, epochs = 100)
 
 	labels = np.array([lab1]).copy()
 	train_inds = np.random.choice(len(scaled_mat), size = int(0.7*len(scaled_mat)),replace=False)
@@ -630,7 +630,7 @@ for i in range(1):
 	labels[:, unlab_inds] = np.nan
 
 	tic = time.perf_counter()
-	ncaR = NN_NCA(n_latent = n_latent, epochs = 100)
+	ncaR = mcml(n_latent = n_latent, epochs = 100)
 
 	lossesR, latentR = ncaR.fit(scaled_mat,nanLabs,fracNCA = 0, silent = True,ret_loss = True)
 	toc = time.perf_counter()
@@ -653,8 +653,8 @@ for b in [0.99]:
 		labels[:, unlab_inds] = np.nan
 
 		tic = time.perf_counter()
-		nca = NN_NCA(n_latent = n_latent, epochs = 100)
-		#ncaR2 = NN_NCA(n_latent = n_latent, epochs = 100)
+		nca = mcml(n_latent = n_latent, epochs = 100)
+		#ncaR2 = mcml(n_latent = n_latent, epochs = 100)
 
 
 		losses, latent = nca.fit(scaled_mat,labels,fracNCA = b, silent = True,ret_loss = True)
