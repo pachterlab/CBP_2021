@@ -8,19 +8,94 @@ import random
 from torchsummary import summary
 from collections import Counter
 import itertools
-from MCML import mcml, autoencoder
+
 from scipy.optimize import linear_sum_assignment
+
+class autoencoder(nn.Module):
+	"""
+	Create autoencoder architecture
+	Returns: autoencoder object
+    """
+	def __init__(self,n_input: int, n_hidden: int, n_output: int, dropout_rate = 0.1):
+		super(autoencoder,self).__init__()
+
+		#Encoder
+		self.encoder = nn.Sequential(nn.Linear(n_input, n_hidden),
+			#Parameter value from scVI original tensorflow implementation
+			nn.BatchNorm1d(n_hidden, momentum=0.01, eps=0.001),
+			nn.ReLU(True),
+			nn.Dropout(p=dropout_rate),
+			nn.Linear(n_hidden, n_output))
+
+		#Linear decoder
+		self.decoder = nn.Linear(n_output, n_input, bias=False)
+
+	def forward(self, x):
+		z = self.encoder(x)
+		return self.decoder(z), z
+
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-class picasso(mcml):
+
+
+class picasso():
 	"""
 	Create object for fitting Picasso model
 	Returns: Picasso model object
     """
 
 	def __init__(self, n_latent = 10, n_hidden = 128, epochs = 100,batch_size = 128, lr = 1e-3, weight_decay=1e-5):
-		super().__init__(n_latent, n_hidden, epochs,batch_size, lr, weight_decay)
+		#super(NN_NCA, self).__init__()
+
+		#torch.manual_seed(0)
+
+		self.n_latent = n_latent
+		self.epochs = epochs
+		self.n_hidden = n_hidden
+		self.model = None
+		self.batch_size = batch_size
+		self.lr = lr
+		self.weight_decay = weight_decay
+
+		self.set_weights = False
+		self.weights = None
+		self.Losses = None
+		self.test_losses = None
+
+	def pairwise_dists(self,z1,z2,p=2.0):
+		"""
+		Parameters:
+		z1 : Input matrix 1
+		z2 : Input matrix 2
+		p : Distance metric (1=manhattan, 2=euclidean)
+		Returns :
+		Pairwise distance matrix between z1 and z2
+		"""
+		d1 = z1.clone()
+		d2 = z2.clone()
+		dist = torch.cdist(d1, d2, p=p)
+		#dist = torch.clamp(dist, min=0)
+		return dist.clone()
+
+
+	def softmax(self, p):
+		"""
+		Parameters:
+		p : n_obs x n_obs probability matrix
+		Returns :
+		Softmax of matrix p
+		"""
+		#Based on sklearn NCA implementation
+
+		#Subtract max prob from each row for numerical stability
+		p = p.clone()
+		max_prob, max_indexes = torch.max(p,dim=1,keepdim=True)
+		p = p - max_prob.expand_as(p)
+		p = torch.exp(p)
+		sum_p = torch.sum(p,dim=1,keepdim=True)
+		p = p / sum_p.expand_as(p)
+		return p
 
 
 	def lossFunc(self, recon_batch, X_b, z, coord_b, frac):
@@ -76,6 +151,16 @@ class picasso(mcml):
 		#return batch_loss
 		return p_sum_bound, recon_loss_b, loss
 
+	def getLoadings(self):
+		"""
+		Returns :
+		Weights from the decoder layer, matrix of n_features x n_hidden
+		"""
+		if self.model != None:
+			return self.model.decoder.weight.detach().cpu().numpy()
+		else:
+			return None
+
 	def plotLosses(self, figsize=(15,4),fname=None,axisFontSize=11,tickFontSize=10):
 		"""
 		Parameters:
@@ -120,6 +205,8 @@ class picasso(mcml):
 			plt.savefig(fname)
 		else:
 			plt.show()
+
+
 
 
 	def fit(self, X, coords, frac = 0.8, silent = False, ret_loss = False, summ = False):
