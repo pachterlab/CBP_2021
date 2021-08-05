@@ -7,7 +7,7 @@ import itertools
 import umap
 from sklearn.decomposition import TruncatedSVD
 from sklearn.manifold import TSNE
-from MCML import NN_NCA
+from MCML import mcml
 import densne
 import pandas as pd
 #Centroids of clusters/labels
@@ -371,7 +371,7 @@ def visCompAll(scaled_mat, ndims=2, pcs=50, rounds = 5):
 		pcaDensTSNE, ro ,re = densne.run_densne(x_pca,no_dims = ndims) # randseed = state
 
 		#MCML runs
-		ncaR = NN_NCA(n_latent = pcs, epochs = 100)
+		ncaR = mcml(n_latent = pcs, epochs = 100)
 
 		lossesR, latentR = ncaR.fit(scaled_mat,nanLabs,fracNCA = 0, silent = True,ret_loss = True)
 
@@ -417,7 +417,7 @@ def reconComp(scaled_mat, ndims=2, pcs=50, rounds = 3):
 
 
 		#MCML runs
-		ncaR = NN_NCA(n_latent = pcs, epochs = 100)
+		ncaR = mcml(n_latent = pcs, epochs = 100)
 
 		lossesR, latentR = ncaR.fit(scaled_mat,nanLabs,fracNCA = 0, silent = True,ret_loss = True)
 
