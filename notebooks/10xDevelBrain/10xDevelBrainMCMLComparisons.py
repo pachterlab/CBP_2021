@@ -54,13 +54,13 @@ os.system("pip3 install --quiet scvi-tools --no-cache-dir")
 
 os.system("git clone https://github.com/pachterlab/CBP_2021.git")
 
-os.system("cd /content/CBP_2021/scripts")
+os.chdir("/content/CBP_2021/scripts")
 
 
 import anndata 
 import pandas as pd
 import numpy as np
-from MCML import mcml #Now has continuous label addition
+from MCML import MCML #Now has continuous label addition
 # import visualizations as vis
 # import tools as tl
 import random
@@ -270,7 +270,7 @@ acc_scoreR = []
 acc_scoreR2 = []
 for i in range(3):
 	tic = time.perf_counter()
-	ncaR = mcml(n_latent = n_latent, epochs = 100)
+	ncaR = MCML(n_latent = n_latent, epochs = 100)
 	labels = np.array([lab1])
 	train_inds = np.random.choice(len(scaled_mat), size = int(0.7*len(scaled_mat)),replace=False)
 	unlab_inds = [i for i in range(len(adata)) if i not in train_inds]
@@ -303,8 +303,8 @@ print(acc_scoreR2)
 
 # for i in range(3):
 # 	tic = time.perf_counter()
-# 	nca = mcml(n_latent = n_latent, epochs = 100)
-# 	ncaR2 = mcml(n_latent = n_latent, epochs = 100)
+# 	nca = MCML(n_latent = n_latent, epochs = 100)
+# 	ncaR2 = MCML(n_latent = n_latent, epochs = 100)
 
 # 	labels = np.array([lab1])
 # 	train_inds = np.random.choice(len(scaled_mat), size = int(0.7*len(scaled_mat)),replace=False)
@@ -352,8 +352,8 @@ for b in [0.99]:
 
 	for i in range(3):
 		tic = time.perf_counter()
-		nca = mcml(n_latent = n_latent, epochs = 500)
-		#ncaR2 = mcml(n_latent = n_latent, epochs = 100)
+		nca = MCML(n_latent = n_latent, epochs = 500)
+		#ncaR2 = MCML(n_latent = n_latent, epochs = 100)
 
 		labels = np.array([lab1])
 		train_inds = np.random.choice(len(scaled_mat), size = int(0.7*len(scaled_mat)),replace=False)
