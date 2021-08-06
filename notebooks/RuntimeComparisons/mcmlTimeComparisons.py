@@ -112,7 +112,7 @@ os.system("pip3 install --quiet scvi-tools --no-cache-dir")
 
 os.system("git clone https://github.com/pachterlab/CBP_2021.git")
 
-os.system("cd /content/CBP_2021/scripts")
+os.chdir("/content/CBP_2021/scripts")
 
 import anndata 
 import pandas as pd
