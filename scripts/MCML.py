@@ -42,7 +42,7 @@ class autoencoder(nn.Module):
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-class mcml():
+class MCML():
 	"""
 	Create object for fitting NCA model
 	Returns: NCA model object
@@ -611,7 +611,7 @@ class mcml():
 
 
 
-class bmcml(mcml):
+class bMCML(MCML):
 	"""
 	Create object for fitting biased reconstruction model
 	Returns: Biased Recon model object
