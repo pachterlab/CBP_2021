@@ -1,7 +1,6 @@
 import requests
 import os
 
-#La Manno et al. 2020, Developing Mouse Brain data
 from tqdm import tnrange, tqdm_notebook
 def download_file(doi,ext):
 	url = 'https://api.datacite.org/dois/'+doi+'/media'
@@ -84,7 +83,7 @@ os.chdir("/content/CBP_2021/scripts")
 import anndata 
 import pandas as pd
 import numpy as np
-from MCML import mcml #Now has continuous label addition
+from MCML import MCML #Now has continuous label addition
 import random
 
 from sklearn.decomposition import TruncatedSVD
@@ -162,7 +161,7 @@ device = "cpu" #torch.device("cuda" if torch.cuda.is_available() else "cpu")
 for i in range(3):
 	# Latent space from All NCA loss
 	tic = time.perf_counter()
-	nca = mcml(n_latent = n_latent, epochs = 50)
+	nca = MCML(n_latent = n_latent, epochs = 50)
 	latent_allNCA = nca.fit(scaled_mat,allLabs, fracNCA = 1, silent = True)
 	toc = time.perf_counter()
 	print(f"nnNCA fit in {toc - tic:0.4f} seconds")
@@ -189,7 +188,7 @@ for i in range(3):
 	X_trans = ncaSk.transform(X)
 
 	# Make NCA object and use functions to get masks + loss
-	newNCA = mcml(n_latent = n_latent, epochs = 50)
+	newNCA = MCML(n_latent = n_latent, epochs = 50)
 
 	logX = torch.from_numpy(scaled_mat).float().to("cpu")
 
@@ -255,7 +254,7 @@ scaled_mat = sub.X
 for i in range(3):
 	# Latent space from All NCA loss
 	tic = time.perf_counter()
-	nca = mcml(n_latent = n_latent, epochs = 50)
+	nca = MCML(n_latent = n_latent, epochs = 50)
 	latent_allNCA = nca.fit(scaled_mat,labs, fracNCA = 1, silent = True)
 	toc = time.perf_counter()
 	print(f"nnNCA fit in {toc - tic:0.4f} seconds")
@@ -282,7 +281,7 @@ for i in range(3):
 	X_trans = ncaSk.transform(X)
 
 	# Make NCA object and use functions to get masks + loss
-	newNCA = mcml(n_latent = n_latent, epochs = 50)
+	newNCA = MCML(n_latent = n_latent, epochs = 50)
 
 	logX = torch.from_numpy(scaled_mat).float().to("cpu")
 

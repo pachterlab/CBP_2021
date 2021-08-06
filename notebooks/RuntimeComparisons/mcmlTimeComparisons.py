@@ -117,7 +117,7 @@ os.chdir("/content/CBP_2021/scripts")
 import anndata 
 import pandas as pd
 import numpy as np
-from MCML import mcml #Now has continuous label addition
+from MCML import MCML #Now has continuous label addition
 import random
 import scvi
 from sklearn.decomposition import TruncatedSVD
@@ -255,7 +255,7 @@ for i in range(1):
 
 
 	tic = time.perf_counter()
-	ncaR = mcml(n_latent = n_latent, epochs = 100)
+	ncaR = MCML(n_latent = n_latent, epochs = 100)
 
 
 	lossesR, latentR = ncaR.fit(count_mat,nanLabs,fracNCA = 0, silent = True,ret_loss = True) #labels
@@ -268,7 +268,7 @@ dataset += ['pseudotime']
 embed += ['Recon MCML 50D']
 numCells += [count_mat.shape[0]]
 
-#label mcml
+#label MCML
 
 for i in range(1):
 	numLabs = int(np.round(len(nanLabs[0])*0.7))
@@ -286,7 +286,7 @@ for i in range(1):
 	newLabs[unlabeled_idx,:] = np.nan
 
 	tic = time.perf_counter()
-	ncaMiss = mcml(n_latent = n_latent, epochs = 100) #n_latent
+	ncaMiss = MCML(n_latent = n_latent, epochs = 100) #n_latent
 
 
 	lossesNCAMiss, latentNCAMiss = ncaMiss.fit(count_mat,newLabs.T,fracNCA = 0.9999, silent = True,ret_loss = True)
@@ -356,7 +356,7 @@ dataset += ['smartseq']
 embed += ['SCANVI']
 numCells += [raw_count_mat.shape[0]]
 
-#recon mcml
+#recon MCML
 lab1 = list(meta.smartseq_cluster)
 lab2 = list(meta.sex_label)
 lab3 = list(meta.medical_cond_label)
@@ -376,7 +376,7 @@ for i in range(1):
 	labels[:, unlab_inds] = np.nan
 
 	tic = time.perf_counter()
-	ncaR = mcml(n_latent = n_latent, epochs = 100)
+	ncaR = MCML(n_latent = n_latent, epochs = 100)
 
 
 	lossesR, latentR = ncaR.fit(scaled_mat,nanLabs,fracNCA = 0, silent = True,ret_loss = True) #labels
@@ -389,7 +389,7 @@ dataset += ['smartseq']
 embed += ['Recon MCML 50D']
 numCells += [raw_count_mat.shape[0]]
 
-# label mcml
+# label MCML
 
 
 for i in range(1): #3
@@ -399,7 +399,7 @@ for i in range(1): #3
 	labels[:, unlab_inds] = np.nan
 
 	tic = time.perf_counter()
-	nca = mcml(n_latent = n_latent, epochs = 100)
+	nca = MCML(n_latent = n_latent, epochs = 100)
 
 
 	losses, latent = nca.fit(scaled_mat,labels,fracNCA = 0.3, silent = True,ret_loss = True)
@@ -485,7 +485,7 @@ nanLabs = np.array([[np.nan]*len(lab1)])
 
 for i in range(1):
 	tic = time.perf_counter()
-	ncaR = mcml(n_latent = n_latent, epochs = 100)
+	ncaR = MCML(n_latent = n_latent, epochs = 100)
 	labels = np.array([lab1])
 	train_inds = np.random.choice(len(scaled_mat), size = int(0.7*len(scaled_mat)),replace=False)
 	unlab_inds = [i for i in range(len(adata)) if i not in train_inds]
@@ -499,12 +499,12 @@ dataset += ['tenx']
 embed += ['Recon MCML 50D']
 numCells += [rawcount_mat.shape[0]]
 
-#label mcml
+#label MCML
 
 
 for i in range(1): #3
 	tic = time.perf_counter()
-	nca = mcml(n_latent = n_latent, epochs = 100)
+	nca = MCML(n_latent = n_latent, epochs = 100)
 
 	labels = np.array([lab1]).copy()
 	train_inds = np.random.choice(len(scaled_mat), size = int(0.7*len(scaled_mat)),replace=False)
@@ -609,7 +609,7 @@ dataset += ['lamanno']
 embed += ['LDVAE']
 numCells += [rawcount_mat.shape[0]]
 
-#recon mcml
+#recon MCML
 
 lab1 = list(meta.ClusterName)
 lab2 = list(meta.Age)
@@ -630,7 +630,7 @@ for i in range(1):
 	labels[:, unlab_inds] = np.nan
 
 	tic = time.perf_counter()
-	ncaR = mcml(n_latent = n_latent, epochs = 100)
+	ncaR = MCML(n_latent = n_latent, epochs = 100)
 
 	lossesR, latentR = ncaR.fit(scaled_mat,nanLabs,fracNCA = 0, silent = True,ret_loss = True)
 	toc = time.perf_counter()
@@ -640,7 +640,7 @@ dataset += ['lamanno']
 embed += ['Recon MCML 50D']
 numCells += [rawcount_mat.shape[0]]
 
-#label mcml
+#label MCML
 
 for b in [0.99]:
 # fracNCA = 0.5 
@@ -653,8 +653,8 @@ for b in [0.99]:
 		labels[:, unlab_inds] = np.nan
 
 		tic = time.perf_counter()
-		nca = mcml(n_latent = n_latent, epochs = 100)
-		#ncaR2 = mcml(n_latent = n_latent, epochs = 100)
+		nca = MCML(n_latent = n_latent, epochs = 100)
+		#ncaR2 = MCML(n_latent = n_latent, epochs = 100)
 
 
 		losses, latent = nca.fit(scaled_mat,labels,fracNCA = b, silent = True,ret_loss = True)
