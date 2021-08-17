@@ -1,3 +1,4 @@
+#----------------- Download Data -----------------
 import requests
 import os
 
@@ -82,7 +83,7 @@ import scipy.io as sio
 #sns.set_style('white')
 
 
-# ## **Import Data**
+#----------------- Code for testing Cell Label Prediction on Developing Mouse Brain data -----------------
 
 
 
@@ -188,7 +189,7 @@ def knn_infer(embd_space, labeled_idx, labeled_lab, unlabeled_idx,n_neighbors=50
 	return pred_lab
 
 
-# # # In[20]:
+
 # SCANVI accuracy scores
 scvi.data.setup_anndata(adata2, labels_key='ClusterName')
 acc_score_scanvi = []
@@ -296,54 +297,8 @@ print(acc_scoreR2)
 # # # In[24]:
 
 
-# # NCA loss only
-# acc_scoreNCA = []
-# acc_scoreNCA2 = []
-# acc_scoreNCA3 = []
+# NCA loss (MCML)
 
-# for i in range(3):
-# 	tic = time.perf_counter()
-# 	nca = MCML(n_latent = n_latent, epochs = 100)
-# 	ncaR2 = MCML(n_latent = n_latent, epochs = 100)
-
-# 	labels = np.array([lab1])
-# 	train_inds = np.random.choice(len(scaled_mat), size = int(0.7*len(scaled_mat)),replace=False)
-# 	unlab_inds = [i for i in range(len(adata)) if i not in train_inds]
-		
-		
-# 	labels[:,unlab_inds] = np.nan
-
-# 	#2 labels
-# 	labels2 = allLabs2.copy()
-# 	labels2[:, unlab_inds] = np.nan
-
-# 	losses, latent = nca.fit(scaled_mat,labels,fracNCA = 1, silent = True,ret_loss = True)
-# 	#losses2, latent2 = ncaR2.fit(scaled_mat,labels2,fracNCA = 1, silent = True,ret_loss = True)
-		
-# 	toc = time.perf_counter()
-# 	unlabeled_idx = []
-# 	for i in range(len(adata)):
-# 			if i not in train_inds:
-# 					unlabeled_idx.append(i)
-# 	preds = knn_infer(latent, train_inds, adata.obs.ClusterName.values[train_inds], unlabeled_idx)
-# 	acc = accuracy_score(adata.obs.ClusterName.values[unlabeled_idx], preds)
-# 	acc_scoreNCA.append(acc)
-
-# 	# preds2 = knn_infer(latent2, train_inds, adata.obs.ClusterName.values[train_inds], unlabeled_idx)
-# 	# acc2 = accuracy_score(adata.obs.ClusterName.values[unlabeled_idx], preds2)
-# 	# acc_scoreNCA2.append(acc2)
-
-# 	# preds2 = knn_infer(latent2, train_inds, adata.obs.Age.values[train_inds], unlabeled_idx)
-# 	# acc2 = accuracy_score(adata.obs.Age.values[unlabeled_idx], preds2)
-# 	# acc_scoreNCA3.append(acc2)
-
-# 	print(f"nnNCA fit in {toc - tic:0.4f} seconds")
-
-# print(acc_scoreNCA)
-# print(acc_scoreNCA2)
-# print(acc_scoreNCA3)
-
-# # # In[25]:
 acc_scoreBoth = []
 acc_scoreBoth2 = []
 acc_scoreBoth3 = []
@@ -393,6 +348,7 @@ print(acc_scoreBoth)
 # # print(acc_scoreBoth2)
 # # print(acc_scoreBoth3)
 
+#PCA 50D accuracy
 acc_scorePCA = []
 
 for i in range(3):
@@ -416,7 +372,7 @@ for i in range(3):
 
 print(acc_scorePCA)
 
-#Save knn prediction accuracy scores for cell type labels
+#---------------- Save knn prediction accuracy scores for cell type labels ----------------
 vals = pd.DataFrame()
 
 vals['Accuracy'] = acc_score + acc_score_scanvi + acc_scoreR + acc_scoreBoth + acc_scorePCA #+ acc_score2 + acc_score_scanvi2 + acc_scoreR2 + acc_scoreBoth3 + acc_scoreBoth2 #+ netAE_score + netAE_score2
@@ -433,7 +389,7 @@ print('Made CSV')
 
 
 
-
+#---------------- Test MCML prediction accuracy with lower percentages of labeled data ----------------
 
 acc_scoreBoth = []
 percs = [0.7,0.6,0.5,0.4,0.3,0.2,0.1]
