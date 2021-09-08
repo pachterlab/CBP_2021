@@ -55,7 +55,7 @@ os.system("pip3 install --quiet scvi-tools --no-cache-dir")
 
 os.system("git clone https://github.com/pachterlab/CBP_2021.git")
 
-os.chdir("/content/CBP_2021/scripts")
+os.chdir("./CBP_2021/scripts")
 
 
 import anndata 
