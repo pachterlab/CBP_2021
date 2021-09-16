@@ -1,6 +1,6 @@
 # CBP_2021
 
-Notebooks for reproducing all figures and analysis in the *The Specious Art of Single-Cell Genomics* [preprint](https://doi.org/10.1101/2021.01.22.427844).
+Notebooks for reproducing all figures and analysis in the *The Specious Art of Single-Cell Genomics* [preprint](https://www.biorxiv.org/content/10.1101/2021.08.25.457696v1).
 
 ## Getting Started
 
